@@ -173,9 +173,9 @@ auto main() -> int
 
         }
 
-        plt::plot(u, v);
-        plt::scatter(x, y, 20);
-        plt::show();
+        plt::plot(u, v, {{"color", "#1f77b4"}});
+        plt::scatter(x, y, 20, {{"color", "#1f77b4"}});
+        // plt::show();
         plt::save("spiral.png");
     }
 
@@ -205,10 +205,10 @@ auto main() -> int
 
         }
 
-        plt::plot(u, v);
-        plt::scatter(x, y, 20);
+        plt::plot(u, v, {{"color", "#1f77b4"}});
+        plt::scatter(x, y, 20, {{"color", "#1f77b4"}});
         plt::quiver(x, y, dx, dy);
-        plt::show();
+        // plt::show();
         plt::save("dual_number_spiral.png");
     }
 
