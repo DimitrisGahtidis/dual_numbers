@@ -1,2 +1,2 @@
 # dual_numbers
-Implementation of dual numbers in cpp
+A (currently very broken) implementation of dual numbers in cpp
