@@ -151,9 +151,67 @@ constexpr auto dn::id(const double& v) -> dn
 namespace plt = matplotlibcpp;
 auto main() -> int
 {
-    auto x = dn{2,2};
-    std::cout << x + 2 << std::endl;
-    
+    // Here I parametrize a spiral the code is simple as it's just a circle with increasing radius over time
+    {
+        plt::backend("tkagg");
+        int n = 1000;
+        int samples = 20;
+
+        std::vector<double> u(n), v(n);
+        std::vector<double> x(samples), y(samples), dx(samples), dy(samples);
+        for (int i = 0; i < n; ++i)
+        {
+            double t = double{1.*i/n};
+            double point[2] = {std::cos(t*(2*M_PI))*t, std::sin(t*(2*M_PI))*t};
+            if (i%(n/samples) == 0)
+            {
+                x.at(i/(n/samples)) = point[0];
+                y.at(i/(n/samples)) = point[1];
+            }
+            u.at(i) = point[0];
+            v.at(i) = point[1];
+
+        }
+
+        plt::plot(u, v);
+        plt::scatter(x, y, 20);
+        plt::show();
+        plt::save("spiral.png");
+    }
+
+    // Here I change the above code in order to extract the tangent vector information from the sampled points.
+    // We can see that there is very little code alteration, by design the old code should look similar to the new one.
+    {
+        plt::backend("tkagg");
+        int n = 1000;
+        int samples = 20;
+
+        std::vector<double> u(n), v(n);
+        std::vector<double> x(samples), y(samples), dx(samples), dy(samples);
+        for (int i = 0; i < n; ++i)
+        {
+            dn t = dn{1.*i/n,1};
+            dn point[2] = {dn::cos(t*(2*M_PI))*t, dn::sin(t*(2*M_PI))*t};
+            if (i%(n/samples) == 0)
+            {
+                double magnitude = 1; // std::hypot(point[0].d, point[1].d);
+                x.at(i/(n/samples)) = point[0].re;
+                y.at(i/(n/samples)) = point[1].re;
+                dx.at(i/(n/samples)) = point[0].d/magnitude;
+                dy.at(i/(n/samples)) = point[1].d/magnitude;
+            }
+            u.at(i) = point[0].re;
+            v.at(i) = point[1].re;
+
+        }
+
+        plt::plot(u, v);
+        plt::scatter(x, y, 20);
+        plt::quiver(x, y, dx, dy);
+        plt::show();
+        plt::save("dual_number_spiral.png");
+    }
+
     // {
     //     // unit test
     //     auto x = dn{2,2};
@@ -181,34 +239,6 @@ auto main() -> int
     //     std::cout << dn::tan(M_PI/4) << std::endl;
     //     std::cout << dn::exp(2) << std::endl;
     // }
-
-    {
-        int n = 1000;
-        int samples = 20;
-
-        std::vector<double> u(n), v(n);
-        std::vector<double> x(samples), y(samples), dx(samples), dy(samples);
-        for (int i = 0; i < n; ++i)
-        {
-            dn t = dn{1.*i/n,1};
-            dn point[2] = {dn::cos(t*(2*M_PI))*t, dn::sin(t*(2*M_PI))*t};
-            if (i%(n/samples) == 0)
-            {
-                double magnitude = 1; // std::hypot(point[0].d, point[1].d);
-                x.at(i/(n/samples)) = point[0].re;
-                y.at(i/(n/samples)) = point[1].re;
-                dx.at(i/(n/samples)) = point[0].d/magnitude;
-                dy.at(i/(n/samples)) = point[1].d/magnitude;
-            }
-            u.at(i) = point[0].re;
-            v.at(i) = point[1].re;
-
-        }
-
-        plt::plot(u, v);
-        plt::quiver(x, y, dx, dy);
-        plt::save("spiral.png");
-    }
 
     return 0;
 }
