@@ -7,6 +7,8 @@
 
 namespace dnn
 {
+    /// @brief 
+    /// @tparam T 
     template<typename T>
     class dual_number
     {
@@ -16,133 +18,128 @@ namespace dnn
 
     public:
 
-        
+        explicit constexpr
+        dual_number(const value_type& real = value_type{}, const value_type& diff = value_type{}) noexcept
+            : m_real{ real }
+            , m_diff{ diff }
+        { }
 
-    
-    private:
+        constexpr dual_number(const dual_number&) noexcept   = default;
+        constexpr dual_number(dual_number&&) noexcept        = default;
 
-        double re;
-        double d;
+        template<typename U>
+        constexpr dual_number(const dual_number<U>& dn) noexcept
+            : m_real{ value_type{ dn.real() } }
+            , m_diff{ value_type{ dn.diff() } }
+        { }
 
-        static constexpr auto id(const dual_number& v) -> dual_number;
-        static constexpr auto id(const int& v) -> dual_number;
-        static constexpr auto id(const float& v) -> dual_number;
-        static constexpr auto id(const double& v) -> dual_number;
-
-    private:
-        constexpr auto add(const dual_number& v) -> dual_number
-        { return dual_number{re + v.re, d + v.d}; }
-
-        constexpr auto sub(const dual_number& v) -> dual_number
-        { return dual_number{re - v.re, d - v.d}; }
-        
-        constexpr auto mul(const dual_number& v) -> dual_number
-        { return dual_number{re * v.re, d * v.re + re * v.d}; }
-
-        constexpr auto div(const dual_number& v) -> dual_number
-        { return dual_number{re / v.re, (d*v.re - re*v.d) / (v.re*v.re)}; }
-
-        static auto dn_pow(const dual_number& v, const double& n) -> dual_number
-        { return dual_number{std::pow(v.re, n), n * std::pow(v.re, n-1) * v.d}; }
-
-        static auto dn_sqrt(const dual_number& v) -> dual_number
-        { return dual_number{std::sqrt(v.re), 0.5 * std::pow(v.re, -0.5) * v.d}; }
-
-        static auto dn_cos(const dual_number& v) -> dual_number
-        { return dual_number{std::cos(v.re), -std::sin(v.re) * v.d}; }
-
-        static auto dn_sin(const dual_number& v) -> dual_number
-        { return dual_number{std::sin(v.re), std::cos(v.re) * v.d}; }
-
-        static auto dn_tan(const dual_number& v) -> dual_number
-        { return dual_number{std::tan(v.re), v.d/(std::cos(v.re)*std::cos(v.re))}; }
-
-        static auto dn_exp(const dual_number& v) -> dual_number
-        { return dual_number{std::exp(v.re), std::exp(v.re) * v.d}; }
-
-        static auto dn_acos(const dual_number& v) -> dual_number
-        { return dual_number{std::acos(v.re), v.d/std::sqrt(1-v.re*v.re) }; }
-
-        static auto dn_log(const dual_number& v) -> dual_number
-        { return dual_number{std::log(v.re), v.d/v.re}; }
-
-        auto dn_hypot(const dual_number& v) -> dual_number
-        { return dual_number{std::hypot(re, v.re), (re * d + v.re * v.d) / std::hypot(re, v.re)}; }
-    
-    public:
-        template <typename T, typename U>
-        friend auto operator+ (const T& x, const U& y) -> dual_number
-        { return dual_number::id(x).add(dual_number::id(y)); }
-
-        template <typename T, typename U>
-        friend auto operator- (const T& x, const U& y) -> dual_number
-        { return dual_number::id(x).sub(dual_number::id(y)); }
-
-        template <typename T, typename U>
-        friend auto operator* (const T& x, const U& y) -> dual_number
-        { return dual_number::id(x).mul(dual_number::id(y)); }
-
-        template <typename T, typename U>
-        friend auto operator/ (const T& x, const U& y) -> dual_number
-        { return dual_number::id(x).div(dual_number::id(y)); }
-
-        template <typename T>
-        static auto pow(const T& x, const double& n) -> dual_number
-        { return dual_number::dn_pow(dual_number::id(x), n); }
-
-        template <typename T>
-        static auto sqrt(const T& x) -> dual_number
-        { return dual_number::dn_sqrt(dual_number::id(x)); }
-
-        template <typename T>
-        static auto cos(const T& x) -> dual_number
-        { return dual_number::dn_cos(dual_number::id(x)); }
-
-        template <typename T>
-        static auto sin(const T& x) -> dual_number
-        { return dual_number::dn_sin(dual_number::id(x)); }
-
-        template <typename T>
-        static auto tan(const T& x) -> dual_number
-        { return dual_number::dn_tan(dual_number::id(x)); }
-
-        template <typename T>
-        static auto exp(const T& x) -> dual_number
-        { return dual_number::dn_exp(dual_number::id(x)); }
-
-        template <typename T>
-        static auto acos(const T& x) -> dual_number
-        { return dual_number::dn_acos(dual_number::id(x)); }
-
-        template <typename T>
-        static auto log(const T& x) -> dual_number
-        { return dual_number::dn_log(dual_number::id(x)); }
-
-        template <typename T, typename U>
-        static auto log(const T& x, const U& y) -> dual_number
-        { return dual_number::dn_hypot(dual_number::id(x), dual_number::id(y)); }
-
-        friend auto operator<< (std::ostream& os, const dual_number& v) -> std::ostream&
+        constexpr auto
+        operator= (const value_type& v) noexcept
+            -> dual_number&
         {
-            os << "(" << v.re << "," << v.d << ")";
-            return os;
+            m_real { v };
+            m_diff { value_type{} };
+
+            return *this;
         }
 
-};
+        constexpr auto
+        real() noexcept 
+            -> value_type&
+        { return m_real; }
+
+        constexpr auto
+        real() const noexcept
+            -> const value_type&
+        { return m_real; }
+
+        constexpr auto
+        diff() noexcept 
+            -> value_type&
+        { return m_diff; }
+
+        constexpr auto
+        diff() const noexcept
+            -> const value_type&
+        { return m_diff; }
+
+        constexpr auto
+        operator+= (const value_type& v) noexcept
+            -> dual_number&
+        {
+            m_real += v;
+            return *this;
+        }
+
+        constexpr auto
+        operator-= (const value_type& v) noexcept
+            -> dual_number&
+        {
+            m_real -= v;
+            return *this;
+        }
+
+        constexpr auto
+        operator*= (const value_type& v) noexcept
+            -> dual_number&
+        {
+            m_real *= v;
+            m_diff *= v;
+            return *this;
+        }
+
+        constexpr auto
+        operator/= (const value_type& v) noexcept
+            -> dual_number&
+        {
+            m_real /= v;
+            m_diff /= v;
+            return *this;
+        }
+
+        template<typename U>
+        constexpr auto
+        operator+= (const dual_number<U>& dn) noexcept
+            -> dual_number<T>&
+        {
+            m_real += dn.real();
+            m_diff += dn.diff();
+            return *this;
+        }
+
+        template<typename U>
+        constexpr auto
+        operator-= (const dual_number<U>& dn) noexcept
+            -> dual_number<T>&
+        {
+            m_real -= dn.real();
+            m_diff -= dn.diff();
+            return *this;
+        }
+
+        template<typename U>
+        constexpr auto
+        operator*= (const dual_number<U>& dn) noexcept
+            -> dual_number<T>&
+        {
+            
+            return *this;
+        }
+
+        template<typename U>
+        constexpr auto
+        operator/= (const dual_number<U>& dn) noexcept
+            -> dual_number<T>&
+        {
+            
+            return *this;
+        }
+    
+    private:
+
+        value_type m_real;
+        value_type m_diff;
 }  /// namespace dnn
-
-
-constexpr auto dual_number::id(const dual_number& v) -> dual_number
-{ return v; }
-
-constexpr auto dual_number::id(const int& v) -> dual_number
-{ return dual_number{(double)v, 0}; }
-
-constexpr auto dual_number::id(const float& v) -> dual_number
-{ return dual_number{(double)v, 0}; }
-
-constexpr auto dual_number::id(const double& v) -> dual_number
-{ return dual_number{v, 0}; }
 
 // template<typename real>
 // struct dual_number
