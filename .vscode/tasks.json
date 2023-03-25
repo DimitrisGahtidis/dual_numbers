@@ -3,22 +3,25 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "Build active file with g++ 12.2.0 cpp 11 standard",
+			"label": "Build active file with g++ 12.2.0 cpp 23 standard",
 			"command": "/home/dimitris/miniconda3/envs/cpp/bin/g++",
 			"args": [
-				"-std=c++11",
+				"-std=c++23",
 				"-fdiagnostics-color=always",
+				"-fext-numeric-literals",
 				"-g",
 				"${file}",
 				"-o",
-				"${fileDirname}/build/${fileBasenameNoExtension}",
+				"${workspaceFolder}/build/${fileBasenameNoExtension}",
+				"-I${workspaceFolder}/include",
+				"-I${workspaceFolder}/libs",
 				"-I/home/dimitris/miniconda3/envs/cpp/include/python3.7m",
 				"-I/home/dimitris/miniconda3/envs/cpp/lib/python3.7/site-packages/numpy/core/include",
                 "-L/home/dimitris/miniconda3/envs/cpp/lib",
                 "-lpython3.7m",
 			],
 			"options": {
-				"cwd": "${fileDirname}"
+				"cwd": "${workspaceFolder}"
 			},
 			"problemMatcher": [
 				"$gcc"
