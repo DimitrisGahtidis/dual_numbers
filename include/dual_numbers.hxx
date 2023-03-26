@@ -69,10 +69,9 @@ namespace dnn
 
         constexpr auto
         conj() noexcept
-            -> dual<base_real_type>&
+            -> dual<base_real_type>
         { 
-            m_d = -m_d;
-            return *this; 
+            return dual<base_real_type>{m_re, -m_d}; 
         }
 
         ///{@  dual number unary arithmetic
@@ -326,6 +325,16 @@ namespace dnn
             return m_re >= v.re();
         }
         ///@}   dual number comparison operators
+
+        ///{@   ostream
+        friend constexpr auto
+        operator<<(std::ostream& os, const dual<base_real_type> v) noexcept
+            -> std::ostream&
+        {
+            os << v.m_re << " + " << v.m_d << "_eps";
+            return os;
+        }
+        ///{@   ostream
     
     private:
 
@@ -628,17 +637,6 @@ namespace dnn
         return dual<long double>{0, v};
     }
     ///{@   literals
-
-    ///{@   ostream
-    template<typename base_real_type>
-    constexpr auto
-    operator<<(std::ostream& os, dual<base_real_type> v)
-        -> std::ostream&
-    {
-        os << v.re() << " + " << v.d() << "_eps";
-        return os;
-    }
-    ///{@   ostream
 
     ///{@   misc
     template<typename base_real_type, typename other_real_type>

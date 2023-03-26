@@ -23,10 +23,11 @@ auto main() -> int
         std::cout << "--dual number specific functions--" << std::endl;
         auto x = dual<double>{-1,1};
         std::cout << "auto x = dual<double>{-1,1}: " << std::endl;
-        std::cout << "re(x): " << (dnn::equiv(x.re(), -1) ? "passed" : "failed") << std::endl;
-        std::cout << "d(x): " << (dnn::equiv(dual<double>{-1, 1}.d(), 1) ? "passed" : "failed") << std::endl;
-        std::cout << "norm(x)): " << (dnn::equiv(dual<double>{-1, 1}.norm(), 1) ? "passed" : "failed") << std::endl;
-        std::cout << "conj(x): " << (dnn::equiv(dual<double>{-1, 1}.conj(), dual<double>{-1, -1}) ? "passed" : "failed") << std::endl;
+        std::cout << "re(x):    " << (dnn::equiv(x.re(), -1) ? "passed" : "failed") << std::endl;
+        std::cout << "d(x):     " << (dnn::equiv(x.d(), 1) ? "passed" : "failed") << std::endl;
+        std::cout << "norm(x)): " << (dnn::equiv(x.norm(), 1) ? "passed" : "failed") << std::endl;
+        std::cout << "conj(x):  " << (dnn::equiv(x.conj(), dual<double>{-1, -1}) ? "passed" : "failed") << std::endl;
+        std::cout << "x:        " << (dnn::equiv(x, dual<double>{-1, 1}) ? "passed" : "failed") << std::endl;
         std::cout << "--dual number specific functions--" << std::endl;
     }   // dual number specific functions
     
@@ -111,12 +112,12 @@ auto main() -> int
         std::cout << "--elementary functions--" << std::endl;
         auto x = dual<int>{2, 2};
         auto y = dual<double>{0.5, 2};
-        std::cout << "pow: " << (dnn::equiv( dnn::pow(x, 0.5), dual<double>{dnn::pow(x.re(), 0.5), 0.5 * dnn::pow(x.re(), -0.5) * x.d()} ) ? "passed" : "failed") << std::endl; 
-        std::cout << "pow: " << (dnn::equiv( dnn::pow(0.5, x), dual<double>{dnn::pow(0.5, x.re()), dnn::log(0.5) * dnn::pow(0.5, x.re()) * x.d()} ) ? "passed" : "failed") << std::endl;
-        std::cout << "pow: " << (dnn::equiv( dnn::pow(x, y), dual<double>{dnn::pow(x.re(), y.re()), y.re() * dnn::pow(x.re(), y.re()-1) * x.d() + std::log(x.re()) * std::pow(x.re(), y.re()) * y.d()}) ? "passed" : "failed") << std::endl;
+        std::cout << "pow:  " << (dnn::equiv( dnn::pow(x, 0.5), dual<double>{dnn::pow(x.re(), 0.5), 0.5 * dnn::pow(x.re(), -0.5) * x.d()} ) ? "passed" : "failed") << std::endl; 
+        std::cout << "pow:  " << (dnn::equiv( dnn::pow(0.5, x), dual<double>{dnn::pow(0.5, x.re()), dnn::log(0.5) * dnn::pow(0.5, x.re()) * x.d()} ) ? "passed" : "failed") << std::endl;
+        std::cout << "pow:  " << (dnn::equiv( dnn::pow(x, y), dual<double>{dnn::pow(x.re(), y.re()), y.re() * dnn::pow(x.re(), y.re()-1) * x.d() + std::log(x.re()) * std::pow(x.re(), y.re()) * y.d()}) ? "passed" : "failed") << std::endl;
         std::cout << "sqrt: " << (dnn::equiv( dnn::sqrt(x), dual<double>{dnn::sqrt(x.re()), 0.5 * dnn::pow(x.re(), -0.5) * x.d()} ) ? "passed" : "failed") << std::endl;
-        std::cout << "cos: " << (dnn::equiv( dnn::cos(x), dual<double>{dnn::cos(x.re()), -dnn::sin(x.re()) * x.d()} ) ? "passed" : "failed") << std::endl;
-        std::cout << "sin: " << (dnn::equiv( dnn::sin(x), dual<double>{dnn::sin(x.re()), dnn::cos(x.re()) * x.d()} ) ? "passed" : "failed") << std::endl;
+        std::cout << "cos:  " << (dnn::equiv( dnn::cos(x), dual<double>{dnn::cos(x.re()), -dnn::sin(x.re()) * x.d()} ) ? "passed" : "failed") << std::endl;
+        std::cout << "sin:  " << (dnn::equiv( dnn::sin(x), dual<double>{dnn::sin(x.re()), dnn::cos(x.re()) * x.d()} ) ? "passed" : "failed") << std::endl;
         // be careful of the arc-trig function domains, they are quite small
         std::cout << "acos: " << (dnn::equiv( dnn::acos(y), dual<double>{dnn::acos(y.re()), -y.d()/dnn::sqrt(1-y.re()*y.re())} ) ? "passed" : "failed") << std::endl;
         std::cout << "asin: " << (dnn::equiv( dnn::asin(y), dual<double>{dnn::asin(y.re()), y.d()/dnn::sqrt(1-y.re()*y.re())} ) ? "passed" : "failed") << std::endl;
