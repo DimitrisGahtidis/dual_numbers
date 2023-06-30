@@ -15,6 +15,7 @@
 				"${workspaceFolder}/build/${fileBasenameNoExtension}",
 				"-I${workspaceFolder}/include",
 				"-I${workspaceFolder}/libs",
+				"-I/home/dimitris/miniconda3/envs/cpp/include",
 				"-I/home/dimitris/miniconda3/envs/cpp/include/python3.7m",
 				"-I/home/dimitris/miniconda3/envs/cpp/lib/python3.7/site-packages/numpy/core/include",
                 "-L/home/dimitris/miniconda3/envs/cpp/lib",

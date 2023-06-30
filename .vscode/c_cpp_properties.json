@@ -6,12 +6,13 @@
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/libs",
                 "/home/dimitris/miniconda3/envs/cpp/include/python3.7m",
+                "/home/dimitris/miniconda3/envs/cpp/include",
                 "/home/dimitris/miniconda3/envs/cpp/lib/python3.7/site-packages/numpy/core/include",
                 "/home/dimitris/miniconda3/envs/cpp/lib"
             ],
             "defines": [],
             "compilerPath": "/home/dimitris/miniconda3/envs/cpp/bin/g++",
-            "cStandard": "c11",
+            "cStandard": "c23",
             "intelliSenseMode": "linux-gcc-x64"
         }
     ],
